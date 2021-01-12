@@ -10,6 +10,6 @@ Add dependency to your Cargo.toml
 
 ```toml
 [dependencies]
-ply_rs = { git="https://github.com/diegodox/ply_rs.git", tag = "v0.1.1" }
+ply_rs = { git="https://github.com/diegodox/ply_rs.git", tag = "v0.1.0" }
 ```
 
