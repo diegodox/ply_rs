@@ -10,6 +10,6 @@ Add dependency to your Cargo.toml
 
 ```toml
 [dependencies]
-range_coder = { git="https://github.com/diegodox/ply_rs.git", tag = "v0.1.0" }
+ply_rs = { git="https://github.com/diegodox/ply_rs.git", tag = "v0.1.0" }
 ```
 
