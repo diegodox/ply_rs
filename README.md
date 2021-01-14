@@ -1,6 +1,6 @@
 # ply_rs
 
-Pure Rust PLY (Polygon File Format) file reader, writer (, also create file in code, see exmaples).
+Pure Rust PLY (Polygon File Format) file reader, writer (also create file in code, see exmaples).
 
 Ascii/Binary (both big-endian and small-endian) format supported.
 
