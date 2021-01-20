@@ -3,6 +3,7 @@
 //! [PLY (Polygon File Format)](http://paulbourke.net/dataformats/ply/) file parser for Rust
 //!
 use std::{
+    convert::TryInto,
     fmt::{Debug, Display},
     ops::Deref,
 };
@@ -80,6 +81,26 @@ impl Display for Comment {
 pub enum Element {
     Element(GenericElement<Property>),
     ListElement(GenericElement<PropertyList>),
+}
+impl TryInto<GenericElement<Property>> for Element {
+    type Error = PLYError;
+
+    fn try_into(self) -> Result<GenericElement<Property>, Self::Error> {
+        match self {
+            Element::Element(e) => Ok(e),
+            Element::ListElement(_) => Err(PLYError::MissmatchDataType),
+        }
+    }
+}
+impl TryInto<GenericElement<PropertyList>> for Element {
+    type Error = PLYError;
+
+    fn try_into(self) -> Result<GenericElement<PropertyList>, Self::Error> {
+        match self {
+            Element::ListElement(e) => Ok(e),
+            Element::Element(_) => Err(PLYError::MissmatchDataType),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
