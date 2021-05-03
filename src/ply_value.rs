@@ -1,4 +1,3 @@
-use core::panicking::panic;
 use std::{convert::TryInto, fmt::Display, str::FromStr};
 
 use crate::error::{PLYError, PLYResult};
@@ -253,49 +252,49 @@ impl PLYValue {
     pub fn unwrap_char(self) -> i8 {
         match self {
             PLYValue::Char(v) => v,
-            _ => panic("type mismatch"),
+            _ => panic!("type mismatch"),
         }
     }
     pub fn unwrap_uchar(self) -> u8 {
         match self {
             PLYValue::Uchar(v) => v,
-            _ => panic("type mismatch"),
+            _ => panic!("type mismatch"),
         }
     }
     pub fn unwrap_short(self) -> i16 {
         match self {
             PLYValue::Short(v) => v,
-            _ => panic("type mismatch"),
+            _ => panic!("type mismatch"),
         }
     }
     pub fn unwrap_ushort(self) -> u16 {
         match self {
             PLYValue::Ushort(v) => v,
-            _ => panic("type mismatch"),
+            _ => panic!("type mismatch"),
         }
     }
     pub fn unwrap_int(self) -> i32 {
         match self {
             PLYValue::Int(v) => v,
-            _ => panic("type mismatch"),
+            _ => panic!("type mismatch"),
         }
     }
     pub fn unwrap_uint(self) -> u32 {
         match self {
             PLYValue::Uint(v) => v,
-            _ => panic("type mismatch"),
+            _ => panic!("type mismatch"),
         }
     }
     pub fn unwrap_float(self) -> f32 {
         match self {
             PLYValue::Float(v) => v,
-            _ => panic("type mismatch"),
+            _ => panic!("type mismatch"),
         }
     }
     pub fn unwrap_double(self) -> f64 {
         match self {
             PLYValue::Double(v) => v,
-            _ => panic("type mismatch"),
+            _ => panic!("type mismatch"),
         }
     }
 }
