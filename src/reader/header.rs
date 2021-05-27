@@ -3,6 +3,7 @@ use crate::{
 };
 use std::convert::AsRef;
 use std::str::FromStr;
+
 /// Read [HeaderLine]s
 pub(crate) fn from_header_lines<I: Iterator<Item = HeaderLine>>(lines: &mut I) -> PLYFile {
     // assert magic number
@@ -92,7 +93,8 @@ fn test_from_header_lines() {
     )
 }
 
-/// Read headers for find line `element (name) (count)`  
+/// Read headers for find line `element (name) (count)`
+///
 /// Return Some((name, count)) if found, None otherwise
 fn read_to_element_line<I: Iterator<Item = HeaderLine>>(
     lines: &mut I,
@@ -104,23 +106,13 @@ fn read_to_element_line<I: Iterator<Item = HeaderLine>>(
                 return Some((name, count));
             }
             HeaderLine::CommentLine(c) => comments.push(c),
+            HeaderLine::EmptyLine => { /* do nothing */ }
             HeaderLine::UnknownLine => { /* do nothing */ }
-            HeaderLine::EmptyLine => {
-                // do nothing
-            }
-            HeaderLine::PropertyLine { .. } => {
-                panic!(r#"keyword "propety" cannnot use here"#)
-            }
-            HeaderLine::PropertyListLine(_) => {
-                panic!(r#"keyword "propety list" cannnot use here"#)
-            }
-            HeaderLine::FormatLine(_) => {
-                panic!(r#"keyword "format" cannnot use here"#)
-            }
-            HeaderLine::FileIdentifierLine => {
-                panic!(r#"keyword "ply" cannnot use here"#)
-            }
-            HeaderLine::EndHeader => {}
+            HeaderLine::PropertyLine { .. } => panic!(r#"keyword "propety" cannnot use here"#),
+            HeaderLine::PropertyListLine(_) => panic!(r#"keyword "propety list" cannnot use here"#),
+            HeaderLine::FormatLine(_) => panic!(r#"keyword "format" cannnot use here"#),
+            HeaderLine::FileIdentifierLine => panic!(r#"keyword "ply" cannnot use here"#),
+            HeaderLine::EndHeader => panic!(r#"keyword end_header is not allowed here"#),
         }
     }
     None
@@ -155,7 +147,8 @@ fn test_read_to_element_line() {
     assert_eq!(next, Some((r#"vertex"#.to_string(), 8)))
 }
 
-/// Read element's props, arg `(name, count)` is a name and count of element.  
+/// Read element's props, arg `(name, count)` is a name and count of element.
+///
 /// Return Element and name, usize if they found while reading props.
 fn read_element_props<I: Iterator<Item = HeaderLine>>(
     lines: &mut I,
@@ -202,9 +195,7 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
                 return (element, Some((next_name, next_count)));
             }
             HeaderLine::CommentLine(c) => comments.push(c),
-            HeaderLine::EmptyLine => {
-                // do nothing
-            }
+            HeaderLine::EmptyLine => { /* do nothing */ }
             HeaderLine::FileIdentifierLine => {
                 panic!(r#"line "ply" is not allowed here"#)
             }
@@ -388,7 +379,7 @@ pub(crate) fn parse_header_line<S: AsRef<str>>(line: S) -> HeaderLine {
                     let count = PLYValueTypeName::from_str(words.next().unwrap()).unwrap();
                     let prop = PLYValueTypeName::from_str(words.next().unwrap()).unwrap();
                     let name = words.next().expect("property name not found").to_string();
-                    HeaderLine::PropertyListLine(PropertyList { name, count, prop })
+                    HeaderLine::PropertyListLine(PropertyList { count, prop, name })
                 }
                 prop_type_str => HeaderLine::PropertyLine {
                     name: words.next().expect("property name not found").to_string(),
