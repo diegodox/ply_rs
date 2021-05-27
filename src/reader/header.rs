@@ -104,6 +104,7 @@ fn read_to_element_line<I: Iterator<Item = HeaderLine>>(
                 return Some((name, count));
             }
             HeaderLine::CommentLine(c) => comments.push(c),
+            HeaderLine::UnknownLine => { /* do nothing */ }
             HeaderLine::EmptyLine => {
                 // do nothing
             }
@@ -213,6 +214,7 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
             HeaderLine::EndHeader => {
                 panic!(r#"keyword end_header is not allowed here"#)
             }
+            HeaderLine::UnknownLine => {}
         }
     }
 
@@ -365,6 +367,8 @@ pub(crate) enum HeaderLine {
     EmptyLine,
     /// End Header
     EndHeader,
+    /// Line start from unknown identifier
+    UnknownLine,
 }
 
 impl HeaderLine {
@@ -416,7 +420,10 @@ pub(crate) fn parse_header_line<S: AsRef<str>>(line: S) -> HeaderLine {
             "ply" => HeaderLine::FileIdentifierLine,
             "comment" => HeaderLine::CommentLine(Comment(words.map(|s| s.to_string()).collect())),
             "end_header" => HeaderLine::EndHeader,
-            x => panic!("unknown line identifier: {}", x),
+            x => {
+                eprintln!("unknown line identifier: {}", x);
+                HeaderLine::UnknownLine
+            }
         },
     }
 }
