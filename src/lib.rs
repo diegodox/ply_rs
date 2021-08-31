@@ -273,7 +273,7 @@ impl Property {
     /// Iterator over element property (name, prop)
     pub fn iter_mut(&mut self) -> impl Iterator<Item = (&mut str, &mut PLYValueTypeName)> {
         self.names
-            .iter()
+            .iter_mut()
             .map(|x| x.as_mut_str())
             .zip(self.props.iter_mut())
     }
