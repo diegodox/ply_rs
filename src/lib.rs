@@ -123,8 +123,14 @@ impl<P> GenericElement<P> {
     pub fn property(&self) -> &P {
         &self.props
     }
+    pub fn property_mut(&mut self) -> &mut P {
+        &mut self.props
+    }
     pub fn payload(&self) -> &[Payload] {
         &self.payloads
+    }
+    pub fn payload_mut(&mut self) -> &mut [Payload] {
+        &mut self.payloads
     }
 }
 impl GenericElement<Property> {
@@ -295,6 +301,11 @@ impl PropertyList {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Payload(Vec<PLYValue>);
+impl Payload {
+    pub fn push_value(&mut self, v: PLYValue) {
+        self.0.push(v);
+    }
+}
 impl From<Vec<PLYValue>> for Payload {
     fn from(v: Vec<PLYValue>) -> Self {
         Self(v)
