@@ -5,7 +5,7 @@
 use std::{
     convert::TryInto,
     fmt::{Debug, Display},
-    ops::Deref,
+    ops::{Deref, DerefMut},
 };
 
 pub mod error;
@@ -322,5 +322,10 @@ impl Deref for Payload {
     type Target = [PLYValue];
     fn deref(&self) -> &Self::Target {
         &self.0
+    }
+}
+impl DerefMut for Payload {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
     }
 }
