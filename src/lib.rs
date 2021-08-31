@@ -270,6 +270,13 @@ impl Property {
             .map(|x| x.as_str())
             .zip(self.props.iter().copied())
     }
+    /// Iterator over element property (name, prop)
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = (&mut str, &mut PLYValueTypeName)> {
+        self.names
+            .iter()
+            .map(|x| x.as_mut_str())
+            .zip(self.props.iter_mut())
+    }
 }
 impl<S: Into<String>> From<Vec<(S, PLYValueTypeName)>> for Property {
     fn from(v: Vec<(S, PLYValueTypeName)>) -> Self {
