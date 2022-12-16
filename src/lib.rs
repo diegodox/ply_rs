@@ -314,6 +314,17 @@ impl PropertyList {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Payload(Vec<PLYValue>);
+
+impl IntoIterator for Payload {
+    type Item = PLYValue;
+
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
+
 impl Payload {
     pub fn push_value(&mut self, v: PLYValue) {
         self.0.push(v);
