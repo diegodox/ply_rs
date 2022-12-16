@@ -129,6 +129,9 @@ impl<P> GenericElement<P> {
     pub fn property_mut(&mut self) -> &mut P {
         &mut self.props
     }
+    pub fn into_payload(self) -> Vec<Payload> {
+        self.payloads
+    }
     pub fn payload(&self) -> &[Payload] {
         &self.payloads
     }
