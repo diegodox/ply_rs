@@ -120,6 +120,9 @@ impl<P> GenericElement<P> {
             payloads: Vec::new(),
         }
     }
+    pub fn into_ploperty(self) -> P {
+        self.props
+    }
     pub fn property(&self) -> &P {
         &self.props
     }
