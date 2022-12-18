@@ -3,3 +3,6 @@ name = "ply"
 version = "0.1.0"
 authors = ["Diego Fujii <android.mxdiego9@gmail.com>"]
 edition = "2018"
+
+[dependencies]
+log = { version = "0.4", optional = true }
