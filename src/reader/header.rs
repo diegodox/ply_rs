@@ -411,8 +411,8 @@ pub(crate) fn parse_header_line<S: AsRef<str>>(line: S) -> HeaderLine {
             "ply" => HeaderLine::FileIdentifierLine,
             "comment" => HeaderLine::CommentLine(Comment(words.map(|s| s.to_string()).collect())),
             "end_header" => HeaderLine::EndHeader,
-            x => {
-                eprintln!("unknown line identifier: {}", x);
+            _ => {
+                // eprintln!("unknown line identifier: {}", x);
                 HeaderLine::UnknownLine
             }
         },
