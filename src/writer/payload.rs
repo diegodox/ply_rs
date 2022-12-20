@@ -1,8 +1,6 @@
 use std::io::{BufWriter, Write};
 
-use crate::{
-    ply_value::PlyTryFrom, Format, GenericElement, PLYValue, Payload, Property, PropertyList,
-};
+use crate::{Format, GenericElement, Payload};
 
 pub(crate) fn write_element_payload<T: Write, P: WritePayload<T, Payload = Payload>>(
     element: &GenericElement<P>,
@@ -128,11 +126,13 @@ pub(crate) trait WritePayload<T: Write> {
         payload: &Self::Payload,
         writer: &mut BufWriter<T>,
     ) -> std::io::Result<()>;
+
     fn write_payload_be(
         &self,
         payload: &Self::Payload,
         writer: &mut BufWriter<T>,
     ) -> std::io::Result<()>;
+
     fn write_payload_le(
         &self,
         payload: &Self::Payload,

@@ -2,13 +2,8 @@
 //!
 //! [PLY (Polygon File Format)](http://paulbourke.net/dataformats/ply/) file parser for Rust
 //!
-use std::{
-    fmt::{Debug, Display},
-    ops::{Deref, DerefMut},
-};
 
 pub mod error;
-use error::{PLYError, PLYResult};
 
 pub(crate) mod ply_value;
 pub use ply_value::{PLYValue, PLYValueTypeName};
@@ -28,6 +23,8 @@ pub use element::*;
 mod properties;
 pub use properties::*;
 
+mod payload;
+pub use payload::*;
 
 mod comment;
 pub use comment::*;

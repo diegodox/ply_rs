@@ -1,6 +1,6 @@
 use crate::{Payload, Property, PropertyList};
 
-use self::generic_element::GenericElement;
+pub use self::generic_element::GenericElement;
 
 mod generic_element;
 mod write;

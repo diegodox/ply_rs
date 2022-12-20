@@ -1,10 +1,9 @@
 use std::io::{BufWriter, Write};
 
 use crate::{
-    error::PLYError,
     payload::Payload,
     writer::{header::PlyWriteHeader, payload::WritePayload},
-    GenericElement, PLYValue, PLYValueTypeName,
+    PLYValue, PLYValueTypeName,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -53,43 +52,48 @@ impl<S: Into<String>> From<Vec<(S, PLYValueTypeName)>> for Property {
     }
 }
 
-#[test]
-fn test_push_payload() {
-    let mut element = {
-        let property = {
-            let mut props = Property::new();
-            props.push_prop("x", PLYValueTypeName::Float);
-            props.push_prop("y", PLYValueTypeName::Float);
-            props.push_prop("z", PLYValueTypeName::Float);
-            props
+#[cfg(test)]
+mod test {
+    use crate::{error::PLYError, GenericElement, PLYValue, PLYValueTypeName, Payload, Property};
+
+    #[test]
+    fn test_push_payload() {
+        let mut element = {
+            let property = {
+                let mut props = Property::new();
+                props.push_prop("x", PLYValueTypeName::Float);
+                props.push_prop("y", PLYValueTypeName::Float);
+                props.push_prop("z", PLYValueTypeName::Float);
+                props
+            };
+            GenericElement::new(property)
         };
-        GenericElement::new(property)
-    };
 
-    let result = element.push_payload(Payload::new(vec![
-        PLYValue::Float(1f32),
-        PLYValue::Float(2f32),
-        PLYValue::Float(3f32),
-    ]));
-    assert!(result.is_ok());
-    assert!(element.count() == 1);
+        let result = element.push_payload(Payload::new(vec![
+            PLYValue::Float(1f32),
+            PLYValue::Float(2f32),
+            PLYValue::Float(3f32),
+        ]));
+        assert!(result.is_ok());
+        assert!(element.count() == 1);
 
-    let result = element.push_payload(Payload::new(vec![
-        PLYValue::Double(1f64),
-        PLYValue::Double(2f64),
-        PLYValue::Double(3f64),
-    ]));
-    assert_eq!(result, Err(PLYError::MissmatchDataType));
-    assert!(element.count() == 1);
+        let result = element.push_payload(Payload::new(vec![
+            PLYValue::Double(1f64),
+            PLYValue::Double(2f64),
+            PLYValue::Double(3f64),
+        ]));
+        assert_eq!(result, Err(PLYError::MissmatchDataType));
+        assert!(element.count() == 1);
 
-    let result = element.push_payload(Payload::new(vec![
-        PLYValue::Float(1f32),
-        PLYValue::Float(2f32),
-        PLYValue::Float(3f32),
-        PLYValue::Float(4f32),
-    ]));
-    assert_eq!(result, Err(PLYError::PropertyLengthErr));
-    assert!(element.count() == 1);
+        let result = element.push_payload(Payload::new(vec![
+            PLYValue::Float(1f32),
+            PLYValue::Float(2f32),
+            PLYValue::Float(3f32),
+            PLYValue::Float(4f32),
+        ]));
+        assert_eq!(result, Err(PLYError::PropertyLengthErr));
+        assert!(element.count() == 1);
+    }
 }
 
 impl<T: Write> PlyWriteHeader<T> for Property {
