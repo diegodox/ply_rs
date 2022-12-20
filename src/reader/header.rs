@@ -105,7 +105,7 @@ fn read_to_element_line<I: Iterator<Item = HeaderLine>>(
             }
             HeaderLine::CommentLine(c) => comments.push(c),
             HeaderLine::EmptyLine => { /* do nothing */ }
-            HeaderLine::UnknownLine => { /* do nothing */ }
+            HeaderLine::UnknownLine(_) => { /* do nothing */ }
             HeaderLine::PropertyLine { .. } => panic!(r#"keyword "propety" cannnot use here"#),
             HeaderLine::PropertyListLine(_) => panic!(r#"keyword "propety list" cannnot use here"#),
             HeaderLine::FormatLine(_) => panic!(r#"keyword "format" cannnot use here"#),
@@ -203,7 +203,7 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
             HeaderLine::EndHeader => {
                 panic!(r#"keyword end_header is not allowed here"#)
             }
-            HeaderLine::UnknownLine => {}
+            HeaderLine::UnknownLine(_) => {}
         }
     }
 
@@ -357,7 +357,7 @@ pub(crate) enum HeaderLine {
     /// End Header
     EndHeader,
     /// Line start from unknown identifier
-    UnknownLine,
+    UnknownLine(String),
 }
 
 impl HeaderLine {
@@ -412,7 +412,7 @@ pub(crate) fn parse_header_line<S: AsRef<str>>(line: S) -> HeaderLine {
             x => {
                 #[cfg(feature = "log")]
                 log::log!(log::Level::Debug, "unknown line identifier: {}", x);
-                HeaderLine::UnknownLine
+                HeaderLine::UnknownLine(x.to_string())
             }
         },
     }
