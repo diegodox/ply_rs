@@ -42,6 +42,8 @@ impl Display for Comment {
         write!(f, "comment {}", self.0.join(" "))
     }
 }
+mod properties;
+pub use properties::*;
 
 #[derive(Debug, Clone, PartialEq)]
 /// Enum represent PLY Element
@@ -195,68 +197,4 @@ fn test_push_list_payload() {
     assert!(element.count == 2);
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
-/// property "prop" "name"
-pub struct Property {
-    pub(crate) props: Vec<PLYValueTypeName>,
-    pub(crate) names: Vec<String>,
-}
-impl Property {
-    pub fn new() -> Property {
-        Self::default()
-    }
-    pub fn push_prop<S: Into<String>>(&mut self, name: S, property: PLYValueTypeName) {
-        self.props.push(property);
-        self.names.push(name.into());
-    }
-    pub fn is_empty(&self) -> bool {
-        debug_assert_eq!(self.props.is_empty(), self.names.is_empty());
-        self.props.is_empty()
-    }
-    pub fn len(&self) -> usize {
-        debug_assert_eq!(self.props.len(), self.names.len());
-        self.props.len()
-    }
-    /// Iterator over element property (name, prop)
-    pub fn iter(&self) -> impl Iterator<Item = (&str, PLYValueTypeName)> {
-        self.names
-            .iter()
-            .map(|x| x.as_str())
-            .zip(self.props.iter().copied())
-    }
-    /// Iterator over element property (name, prop)
-    pub fn iter_mut(&mut self) -> impl Iterator<Item = (&mut str, &mut PLYValueTypeName)> {
-        self.names
-            .iter_mut()
-            .map(|x| x.as_mut_str())
-            .zip(self.props.iter_mut())
-    }
-}
-impl<S: Into<String>> From<Vec<(S, PLYValueTypeName)>> for Property {
-    fn from(v: Vec<(S, PLYValueTypeName)>) -> Self {
-        let (names, props) = v.into_iter().map(|(s, p)| (s.into(), p)).unzip();
-        Self { names, props }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-/// property list "length-type" "prop-type" "name"
-pub struct PropertyList {
-    pub(crate) count: PLYValueTypeName,
-    pub(crate) prop: PLYValueTypeName,
-    pub(crate) name: String,
-}
-impl PropertyList {
-    pub fn new<S: Into<String>>(
-        name: S,
-        count: PLYValueTypeName,
-        prop: PLYValueTypeName,
-    ) -> PropertyList {
-        Self {
-            count,
-            prop,
-            name: name.into(),
-        }
-    }
-}
 
