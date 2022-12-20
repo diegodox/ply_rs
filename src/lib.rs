@@ -33,27 +33,9 @@ impl PLYFile {
         }
     }
 }
+mod format;
+pub use format::*;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-/// Format of PLY file
-pub enum Format {
-    Ascii { version: String },
-    BinaryBigEndian { version: String },
-    BinaryLittleEndian { version: String },
-}
-impl Display for Format {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Format::Ascii { version } => write!(f, "format ascii {version}"),
-            Format::BinaryBigEndian { version } => {
-                write!(f, "format binary_big_endian {version}")
-            }
-            Format::BinaryLittleEndian { version } => {
-                write!(f, "format binary_little_endian {version}")
-            }
-        }
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 /// Struct represent Comment

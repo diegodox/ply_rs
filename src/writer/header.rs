@@ -24,32 +24,6 @@ impl<T: Write> PlyWriteHeader<T> for PLYFile {
     }
 }
 
-impl<T: Write> PlyWriteHeader<T> for Format {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
-        match self {
-            crate::Format::Ascii { version } => writeln!(writer, "format ascii {version}"),
-            crate::Format::BinaryBigEndian { version } => {
-                writeln!(writer, "format binary_big_endian {version}")
-            }
-            crate::Format::BinaryLittleEndian { version } => {
-                writeln!(writer, "format binary_little_endian {version}")
-            }
-        }
-    }
-}
-#[test]
-fn test_write_format() {
-    let mut writer = BufWriter::new(Vec::new());
-    let format = Format::Ascii {
-        version: "1.0".to_string(),
-    };
-    format.write_header(&mut writer).unwrap();
-    assert_eq!(
-        writer.into_inner().unwrap(),
-        "format ascii 1.0\n".as_bytes(),
-    )
-}
-
 impl<T: Write> PlyWriteHeader<T> for Comment {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
         writeln!(writer, "comment {}", self.0.join(" "))
