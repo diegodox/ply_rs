@@ -33,7 +33,7 @@ fn main() {
     let mut ply = PLYFile::new(Format::Ascii {
         version: "1.0".to_string(),
     });
-    ply.comments.push(Comment::new("test data"));
+    ply.comments.push(Comment::from_string("test data"));
     ply.elements.push(Element::Element {
         name: "vertex".to_string(),
         elements: {
