@@ -1,14 +1,60 @@
-//! PLY File Writer
-
 use std::io::{BufWriter, Write};
 
-use crate::{Element, PLYFile};
+use crate::{
+    writer::{header::PlyWriteHeader, payload::write_element_payload},
+    Comment, Element, Format,
+};
 
-pub(crate) mod header;
-use header::PlyWriteHeader;
+pub const MAGIC_NUMBER: &str = "ply";
+pub const END_HEADER: &str = "end_header";
 
-pub(crate) mod payload;
-use payload::write_element_payload;
+#[derive(Debug, Clone, PartialEq)]
+/// Struct represent PLY File
+pub struct PLYFile {
+    pub format: Format,
+    pub comments: Vec<Comment>,
+    pub elements: Vec<Element>,
+}
+
+impl PLYFile {
+    pub fn new(format: Format) -> Self {
+        Self {
+            format,
+            comments: Vec::new(),
+            elements: Vec::new(),
+        }
+    }
+
+    pub fn write<T: Write>(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
+        self.write_header(writer)?;
+        for element in self.elements.iter() {
+            match element {
+                Element::Element { elements: e, .. } => {
+                    write_element_payload(e, writer, &self.format)?
+                }
+                Element::ListElement { elements: e, .. } => {
+                    write_element_payload(e, writer, &self.format)?
+                }
+            };
+        }
+        Ok(())
+    }
+}
+
+impl<T: Write> PlyWriteHeader<T> for PLYFile {
+    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
+        writeln!(writer, "{MAGIC_NUMBER}")?;
+        self.format.write_header(writer)?;
+        for comment in self.comments.iter() {
+            comment.write_header(writer)?;
+        }
+        for element in self.elements.iter() {
+            element.write_header(writer)?
+        }
+        writeln!(writer, "{END_HEADER}")?;
+        Ok(())
+    }
+}
 
 #[test]
 fn test_write_ply() {
@@ -27,42 +73,42 @@ fn test_write_ply() {
                     names: vec!["x".to_string(), "y".to_string(), "z".to_string()],
                 },
                 payloads: vec![
-                    Payload(vec![
+                    Payload::new(vec![
                         PLYValue::Float(0f32),
                         PLYValue::Float(0f32),
                         PLYValue::Float(0f32),
                     ]),
-                    Payload(vec![
+                    Payload::new(vec![
                         PLYValue::Float(0f32),
                         PLYValue::Float(0f32),
                         PLYValue::Float(1f32),
                     ]),
-                    Payload(vec![
+                    Payload::new(vec![
                         PLYValue::Float(0f32),
                         PLYValue::Float(1f32),
                         PLYValue::Float(1f32),
                     ]),
-                    Payload(vec![
+                    Payload::new(vec![
                         PLYValue::Float(0f32),
                         PLYValue::Float(1f32),
                         PLYValue::Float(0f32),
                     ]),
-                    Payload(vec![
+                    Payload::new(vec![
                         PLYValue::Float(1f32),
                         PLYValue::Float(0f32),
                         PLYValue::Float(0f32),
                     ]),
-                    Payload(vec![
+                    Payload::new(vec![
                         PLYValue::Float(1f32),
                         PLYValue::Float(0f32),
                         PLYValue::Float(1f32),
                     ]),
-                    Payload(vec![
+                    Payload::new(vec![
                         PLYValue::Float(1f32),
                         PLYValue::Float(1f32),
                         PLYValue::Float(1f32),
                     ]),
-                    Payload(vec![
+                    Payload::new(vec![
                         PLYValue::Float(1f32),
                         PLYValue::Float(1f32),
                         PLYValue::Float(0f32),
@@ -80,9 +126,9 @@ fn test_write_ply() {
                     name: "vertex_id".to_string(),
                 },
                 payloads: vec![
-                    Payload(vec![PLYValue::Char(3)]),
-                    Payload(vec![PLYValue::Char(3), PLYValue::Char(3)]),
-                    Payload(vec![
+                    Payload::new(vec![PLYValue::Char(3)]),
+                    Payload::new(vec![PLYValue::Char(3), PLYValue::Char(3)]),
+                    Payload::new(vec![
                         PLYValue::Char(3),
                         PLYValue::Char(3),
                         PLYValue::Char(3),
@@ -94,7 +140,7 @@ fn test_write_ply() {
             format: Format::Ascii {
                 version: "1.0".to_string(),
             },
-            comments: vec![Comment(vec!["test".to_string(), "data".to_string()])],
+            comments: vec![Comment::new(vec!["test".to_string(), "data".to_string()])],
             elements: vec![element_vertex, element_list],
         }
     };

@@ -9,21 +9,6 @@ pub(crate) trait PlyWriteHeader<T: Write> {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()>;
 }
 
-impl<T: Write> PlyWriteHeader<T> for PLYFile {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
-        writeln!(writer, "{MAGIC_NUMBER}")?;
-        self.format.write_header(writer)?;
-        for comment in self.comments.iter() {
-            comment.write_header(writer)?;
-        }
-        for element in self.elements.iter() {
-            element.write_header(writer)?
-        }
-        writeln!(writer, "{END_HEADER}")?;
-        Ok(())
-    }
-}
-
 impl<T: Write> PlyWriteHeader<T> for Comment {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
         writeln!(writer, "comment {}", self.0.join(" "))

@@ -16,23 +16,9 @@ pub use ply_value::{PLYValue, PLYValueTypeName};
 pub(crate) mod reader;
 pub(crate) mod writer;
 
-#[derive(Debug, Clone, PartialEq)]
-/// Struct represent PLY File
-pub struct PLYFile {
-    pub format: Format,
-    pub comments: Vec<Comment>,
-    pub elements: Vec<Element>,
-}
+mod file;
+pub use file::*;
 
-impl PLYFile {
-    pub fn new(format: Format) -> Self {
-        Self {
-            format,
-            comments: Vec::new(),
-            elements: Vec::new(),
-        }
-    }
-}
 mod format;
 pub use format::*;
 
