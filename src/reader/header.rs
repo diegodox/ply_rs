@@ -15,9 +15,8 @@ pub(crate) fn from_header_lines<I: Iterator<Item = HeaderLine>>(lines: &mut I) -
     );
 
     // read format of PLY file
-    let format = match lines.next().expect("Not found: secound line, format style") {
-        HeaderLine::FormatLine(format) => format,
-        _ => panic!("Not found: secound line, format style"),
+    let Some(HeaderLine::FormatLine(format)) = lines.next() else {
+         panic!("Not found: secound line, format style")
     };
 
     // read comment and element
