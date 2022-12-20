@@ -66,8 +66,7 @@ fn test_from_header_lines() {
             name: "z".to_string(),
         },
     ];
-    let mut iter = lines.into_iter();
-    let ply_file = from_header_lines(&mut iter);
+    let ply_file = from_header_lines(&mut lines.into_iter());
     assert_eq!(
         ply_file,
         PLYFile {
