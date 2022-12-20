@@ -29,74 +29,7 @@ pub(crate) fn write_element_payload<T: Write, P: WritePayload<T, Payload = Paylo
     };
     Ok(())
 }
-#[test]
-fn test_write_element_payload_ascii() {
-    use crate::*;
-    let mut writer = BufWriter::new(Vec::new());
-    let element = GenericElement {
-        count: 8,
-        props: Property {
-            props: vec![
-                PLYValueTypeName::Uchar,
-                PLYValueTypeName::Uchar,
-                PLYValueTypeName::Uchar,
-            ],
-            names: vec!["red".to_string(), "green".to_string(), "blue".to_string()],
-        },
-        payloads: vec![
-            Payload(vec![
-                PLYValue::Uchar(0),
-                PLYValue::Uchar(0),
-                PLYValue::Uchar(0),
-            ]),
-            Payload(vec![
-                PLYValue::Uchar(0),
-                PLYValue::Uchar(0),
-                PLYValue::Uchar(1),
-            ]),
-            Payload(vec![
-                PLYValue::Uchar(0),
-                PLYValue::Uchar(1),
-                PLYValue::Uchar(1),
-            ]),
-            Payload(vec![
-                PLYValue::Uchar(0),
-                PLYValue::Uchar(1),
-                PLYValue::Uchar(0),
-            ]),
-            Payload(vec![
-                PLYValue::Uchar(1),
-                PLYValue::Uchar(0),
-                PLYValue::Uchar(0),
-            ]),
-            Payload(vec![
-                PLYValue::Uchar(1),
-                PLYValue::Uchar(0),
-                PLYValue::Uchar(1),
-            ]),
-            Payload(vec![
-                PLYValue::Uchar(1),
-                PLYValue::Uchar(1),
-                PLYValue::Uchar(1),
-            ]),
-            Payload(vec![
-                PLYValue::Uchar(1),
-                PLYValue::Uchar(1),
-                PLYValue::Uchar(0),
-            ]),
-        ],
-    };
 
-    write_element_payload(
-        &element,
-        &mut writer,
-        &Format::Ascii {
-            version: "1.0".to_string(),
-        },
-    )
-    .unwrap();
-    assert_eq!(
-        "\
 0 0 0
 0 0 1
 0 1 1
