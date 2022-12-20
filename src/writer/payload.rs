@@ -96,7 +96,8 @@ fn test_write_element_payload_ascii() {
     )
     .unwrap();
     assert_eq!(
-        r#"0 0 0
+        "\
+0 0 0
 0 0 1
 0 1 1
 0 1 0
@@ -104,7 +105,7 @@ fn test_write_element_payload_ascii() {
 1 0 1
 1 1 1
 1 1 0
-"#
+"
         .as_bytes()
         .to_vec(),
         writer.into_inner().unwrap(),

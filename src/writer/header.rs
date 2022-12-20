@@ -49,9 +49,7 @@ fn test_write_format() {
     format.write_header(&mut writer).unwrap();
     assert_eq!(
         writer.into_inner().unwrap(),
-        r#"format ascii 1.0
-"#
-        .as_bytes(),
+        "format ascii 1.0\n".as_bytes(),
     )
 }
 
@@ -67,9 +65,7 @@ fn test_write_comment() {
     comment.write_header(&mut writer).unwrap();
     assert_eq!(
         writer.into_inner().unwrap(),
-        r#"comment test comment
-"#
-        .as_bytes(),
+        "comment test comment\n".as_bytes(),
     )
 }
 
@@ -109,14 +105,15 @@ fn test_write_element_header() {
     element.write_header(&mut writer).unwrap();
     assert_eq!(
         writer.into_inner().unwrap(),
-        r#"element vertex 20
+        "\
+element vertex 20
 property float x
 property float y
 property float z
 property uchar red
 property uchar green
 property uchar blue
-"#
+"
         .as_bytes(),
     )
 }
@@ -153,13 +150,14 @@ fn test_write_property() {
     property.write_header(&mut writer).unwrap();
     assert_eq!(
         writer.into_inner().unwrap(),
-        r#"property float x
+        "\
+property float x
 property float y
 property float z
 property uchar red
 property uchar green
 property uchar blue
-"#
+"
         .as_bytes(),
     )
 }
@@ -187,8 +185,6 @@ fn test_write_property_list() {
     property.write_header(&mut writer).unwrap();
     assert_eq!(
         writer.into_inner().unwrap(),
-        r#"property list uchar float vertex
-"#
-        .as_bytes(),
+        "property list uchar float vertex\n".as_bytes(),
     )
 }

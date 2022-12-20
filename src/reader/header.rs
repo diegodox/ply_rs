@@ -106,11 +106,11 @@ fn read_to_element_line<I: Iterator<Item = HeaderLine>>(
             HeaderLine::CommentLine(c) => comments.push(c),
             HeaderLine::EmptyLine => { /* do nothing */ }
             HeaderLine::UnknownLine(_) => { /* do nothing */ }
-            HeaderLine::PropertyLine { .. } => panic!(r#"keyword "propety" cannnot use here"#),
-            HeaderLine::PropertyListLine(_) => panic!(r#"keyword "propety list" cannnot use here"#),
-            HeaderLine::FormatLine(_) => panic!(r#"keyword "format" cannnot use here"#),
-            HeaderLine::FileIdentifierLine => panic!(r#"keyword "ply" cannnot use here"#),
-            HeaderLine::EndHeader => panic!(r#"keyword end_header is not allowed here"#),
+            HeaderLine::PropertyLine { .. } => panic!("keyword \"propety\" cannnot use here"),
+            HeaderLine::PropertyListLine(_) => panic!("keyword \"propety list\" cannnot use here"),
+            HeaderLine::FormatLine(_) => panic!("keyword \"format\" cannnot use here"),
+            HeaderLine::FileIdentifierLine => panic!("keyword \"ply\" cannnot use here"),
+            HeaderLine::EndHeader => panic!("keyword \"end_header\" is not allowed here"),
         }
     }
     None
@@ -142,7 +142,7 @@ fn test_read_to_element_line() {
             "cube".to_string()
         ])]
     );
-    assert_eq!(next, Some((r#"vertex"#.to_string(), 8)))
+    assert_eq!(next, Some(("vertex".to_string(), 8)))
 }
 
 /// Read element's props, arg `(name, count)` is a name and count of element.
@@ -166,7 +166,7 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
             HeaderLine::PropertyListLine(prop_list) => {
                 assert!(
                     prop.props.is_empty(),
-                    r#""property" and "property lines" cannot be used at same element"#
+                    "\"property\" and \"property lines\" cannot be used at same element"
                 );
                 return (
                     Element::ListElement(GenericElement {
@@ -195,13 +195,13 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
             HeaderLine::CommentLine(c) => comments.push(c),
             HeaderLine::EmptyLine => { /* do nothing */ }
             HeaderLine::FileIdentifierLine => {
-                panic!(r#"line "ply" is not allowed here"#)
+                panic!("line \"ply\" is not allowed here")
             }
             HeaderLine::FormatLine(_) => {
-                panic!(r#"keyword format is not allowed here"#)
+                panic!("keyword \"format\" is not allowed here")
             }
             HeaderLine::EndHeader => {
-                panic!(r#"keyword end_header is not allowed here"#)
+                panic!("keyword \"end_header\" is not allowed here")
             }
             HeaderLine::UnknownLine(_) => {}
         }
@@ -221,13 +221,14 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
 
 #[test]
 fn test_read_element_props() {
-    let mut lines = r#"property float x
+    let mut lines = "\
+property float x
 property float y
 property float z
 comment color
 property uchar red
 property uchar green
-property uchar blue"#
+property uchar blue"
         .lines()
         .map(|line| parse_header_line(line));
     let mut comments = Vec::new();
@@ -275,7 +276,8 @@ pub(crate) fn read_header_lines<I: Iterator<Item = String>>(lines: &mut I) -> Ve
 
 #[test]
 fn test_read_header_lines() {
-    let mut input = r#"ply
+    let mut input = "\
+ply
 format ascii 1.0
 comment test data
 element vertex 8
@@ -291,7 +293,7 @@ end_header
 1 0 1
 1 1 1
 1 1 0
-"#
+"
     .lines()
     .map(|e| e.to_string());
     let header_lines = read_header_lines(&mut input);
@@ -372,7 +374,7 @@ pub(crate) fn parse_header_line<S: AsRef<str>>(line: S) -> HeaderLine {
     match words.next() {
         None => HeaderLine::EmptyLine,
         Some(first_token) => match first_token {
-            "property" => match words.next().expect(r#"property name or "list" not found"#) {
+            "property" => match words.next().expect("property name or \"list\" not found") {
                 "list" => {
                     let count = PLYValueTypeName::from_str(words.next().unwrap()).unwrap();
                     let prop = PLYValueTypeName::from_str(words.next().unwrap()).unwrap();

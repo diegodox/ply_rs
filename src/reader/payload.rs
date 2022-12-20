@@ -51,15 +51,15 @@ fn test_read_element_payload_ascii() {
         },
         payloads: Vec::<Payload>::with_capacity(8),
     };
-    let lines = r#"0 0 0
+    let lines = "\
+0 0 0
 0 0 1
 0 1 1
 0 1 0
 1 0 0
 1 0 1
 1 1 1
-1 1 0
-"#;
+1 1 0";
     read_elemet_payload_ascii(&mut element, &mut lines.lines().map(|e| e.to_string()));
     assert_eq!(
         element.payloads,
@@ -365,7 +365,7 @@ impl ReadPayload for PropertyList {
 fn test_read_as_ascii() {
     use crate::*;
 
-    let line = r#"0 1 0"#;
+    let line = "0 1 0";
     let prop = Property {
         props: vec![
             PLYValueTypeName::Uchar,

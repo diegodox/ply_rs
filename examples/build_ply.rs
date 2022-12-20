@@ -5,7 +5,8 @@ use ply::{
     Property, PropertyList,
 };
 
-const PLY: &str = r#"ply
+const PLY: &str = "\
+ply
 format ascii 1.0
 comment test data
 element vertex 8
@@ -26,7 +27,7 @@ end_header
 1 3
 2 3 3
 3 3 3 3
-"#;
+";
 
 fn main() {
     let mut ply = PLYFile::new(Format::Ascii {

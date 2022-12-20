@@ -110,7 +110,8 @@ fn test_write_ply() {
     let mut writer = BufWriter::new(Vec::new());
     ply.write(&mut writer).unwrap();
     assert_eq!(
-        r#"ply
+        "\
+ply
 format ascii 1.0
 comment test data
 element vertex 8
@@ -131,7 +132,7 @@ end_header
 1 3
 2 3 3
 3 3 3 3
-"#,
+",
         &String::from_utf8(writer.into_inner().unwrap()).unwrap()
     )
 }

@@ -76,7 +76,8 @@ impl PLYFile {
 #[test]
 fn test_read_ply_file_ascii() {
     use crate::*;
-    let data = r#"ply
+    let data = "\
+ply
 format ascii 1.0
 comment test data
 element vertex 3
@@ -92,7 +93,7 @@ end_header
 1 1
 2 1 2
 3 1 2 3
-"#;
+";
     let mut lines = data.lines().map(|s| s.to_string());
     let ply = PLYFile::from_lines(&mut lines);
     assert_eq!(

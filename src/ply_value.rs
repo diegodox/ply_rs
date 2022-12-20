@@ -31,14 +31,14 @@ impl PLYValueTypeName {
     /// Returns type name
     pub fn to_str(&self) -> &'static str {
         match self {
-            PLYValueTypeName::Char => r#"char"#,
-            PLYValueTypeName::Uchar => r#"uchar"#,
-            PLYValueTypeName::Short => r#"short"#,
-            PLYValueTypeName::Ushort => r#"ushort"#,
-            PLYValueTypeName::Int => r#"int"#,
-            PLYValueTypeName::Uint => r#"uinit"#,
-            PLYValueTypeName::Float => r#"float"#,
-            PLYValueTypeName::Double => r#"double"#,
+            PLYValueTypeName::Char => "char",
+            PLYValueTypeName::Uchar => "uchar",
+            PLYValueTypeName::Short => "short",
+            PLYValueTypeName::Ushort => "ushort",
+            PLYValueTypeName::Int => "int",
+            PLYValueTypeName::Uint => "uinit",
+            PLYValueTypeName::Float => "float",
+            PLYValueTypeName::Double => "double",
         }
     }
     /// parse `&str` into [PLYValue]
