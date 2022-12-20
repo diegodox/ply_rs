@@ -23,25 +23,6 @@ mod format;
 pub use format::*;
 
 
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
-/// Struct represent Comment
-pub struct Comment(Vec<String>);
-impl Comment {
-    pub fn new<S: Into<String>>(comment: S) -> Comment {
-        Comment(
-            comment
-                .into()
-                .split_whitespace()
-                .map(|v| v.to_string())
-                .collect(),
-        )
-    }
-}
-impl Display for Comment {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "comment {}", self.0.join(" "))
-    }
-}
 mod properties;
 pub use properties::*;
 
@@ -198,3 +179,5 @@ fn test_push_list_payload() {
 }
 
 
+mod comment;
+pub use comment::*;

@@ -8,23 +8,6 @@ const END_HEADER: &str = "end_header";
 pub(crate) trait PlyWriteHeader<T: Write> {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()>;
 }
-
-impl<T: Write> PlyWriteHeader<T> for Comment {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
-        writeln!(writer, "comment {}", self.0.join(" "))
-    }
-}
-#[test]
-fn test_write_comment() {
-    let mut writer = BufWriter::new(Vec::new());
-    let comment = Comment(vec!["test".to_string(), "comment".to_string()]);
-    comment.write_header(&mut writer).unwrap();
-    assert_eq!(
-        writer.into_inner().unwrap(),
-        "comment test comment\n".as_bytes(),
-    )
-}
-
 impl<T: Write> PlyWriteHeader<T> for Element {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
         match self {
