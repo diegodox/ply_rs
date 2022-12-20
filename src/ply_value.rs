@@ -331,47 +331,47 @@ impl TryInto<usize> for PLYValue {
     }
 }
 
-impl Into<PLYValue> for i8 {
-    fn into(self) -> PLYValue {
-        PLYValue::Char(self)
+impl From<i8> for PLYValue {
+    fn from(val: i8) -> Self {
+        PLYValue::Char(val)
     }
 }
 #[test]
 fn test_from_i8() {
     assert_eq!(PLYValue::Char(3i8), 3i8.into());
 }
-impl Into<PLYValue> for u8 {
-    fn into(self) -> PLYValue {
-        PLYValue::Uchar(self)
+impl From<u8> for PLYValue {
+    fn from(val: u8) -> Self {
+        PLYValue::Uchar(val)
     }
 }
-impl Into<PLYValue> for i16 {
-    fn into(self) -> PLYValue {
-        PLYValue::Short(self)
+impl From<i16> for PLYValue {
+    fn from(val: i16) -> Self {
+        PLYValue::Short(val)
     }
 }
-impl Into<PLYValue> for u16 {
-    fn into(self) -> PLYValue {
-        PLYValue::Ushort(self)
+impl From<u16> for PLYValue {
+    fn from(val: u16) -> Self {
+        PLYValue::Ushort(val)
     }
 }
-impl Into<PLYValue> for i32 {
-    fn into(self) -> PLYValue {
-        PLYValue::Int(self)
+impl From<i32> for PLYValue {
+    fn from(val: i32) -> Self {
+        PLYValue::Int(val)
     }
 }
-impl Into<PLYValue> for u32 {
-    fn into(self) -> PLYValue {
-        PLYValue::Uint(self)
+impl From<u32> for PLYValue {
+    fn from(val: u32) -> Self {
+        PLYValue::Uint(val)
     }
 }
-impl Into<PLYValue> for f32 {
-    fn into(self) -> PLYValue {
-        PLYValue::Float(self)
+impl From<f32> for PLYValue {
+    fn from(val: f32) -> Self {
+        PLYValue::Float(val)
     }
 }
-impl Into<PLYValue> for f64 {
-    fn into(self) -> PLYValue {
-        PLYValue::Double(self)
+impl From<f64> for PLYValue {
+    fn from(val: f64) -> Self {
+        PLYValue::Double(val)
     }
 }
