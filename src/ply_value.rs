@@ -302,14 +302,14 @@ impl PLYValue {
 impl Display for PLYValue {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            PLYValue::Char(v) => write!(f, "{}", v),
-            PLYValue::Uchar(v) => write!(f, "{}", v),
-            PLYValue::Short(v) => write!(f, "{}", v),
-            PLYValue::Ushort(v) => write!(f, "{}", v),
-            PLYValue::Int(v) => write!(f, "{}", v),
-            PLYValue::Uint(v) => write!(f, "{}", v),
-            PLYValue::Float(v) => write!(f, "{}", v),
-            PLYValue::Double(v) => write!(f, "{}", v),
+            PLYValue::Char(v) => write!(f, "{v}"),
+            PLYValue::Uchar(v) => write!(f, "{v}"),
+            PLYValue::Short(v) => write!(f, "{v}"),
+            PLYValue::Ushort(v) => write!(f, "{v}"),
+            PLYValue::Int(v) => write!(f, "{v}"),
+            PLYValue::Uint(v) => write!(f, "{v}"),
+            PLYValue::Float(v) => write!(f, "{v}"),
+            PLYValue::Double(v) => write!(f, "{v}"),
         }
     }
 }

@@ -143,10 +143,10 @@ impl<T: Write> WritePayload<T> for Property {
         let line = payload
             .0
             .iter()
-            .map(|v| format!("{}", v))
+            .map(|v| format!("{v}"))
             .collect::<Vec<_>>()
             .join(" ");
-        writeln!(writer, "{}", line)
+        writeln!(writer, "{line}")
     }
 
     fn write_payload_be(
@@ -200,7 +200,7 @@ impl<T: Write> WritePayload<T> for PropertyList {
     ) -> std::io::Result<()> {
         let line = payload
             .iter()
-            .map(|v| format!("{}", v))
+            .map(|v| format!("{v}"))
             .collect::<Vec<_>>()
             .join(" ");
         writeln!(writer, "{} {}", payload.len(), line)

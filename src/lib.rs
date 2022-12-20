@@ -45,12 +45,12 @@ pub enum Format {
 impl Display for Format {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Format::Ascii { version } => write!(f, "format ascii {}", version),
+            Format::Ascii { version } => write!(f, "format ascii {version}"),
             Format::BinaryBigEndian { version } => {
-                write!(f, "format binary_big_endian {}", version)
+                write!(f, "format binary_big_endian {version}")
             }
             Format::BinaryLittleEndian { version } => {
-                write!(f, "format binary_little_endian {}", version)
+                write!(f, "format binary_little_endian {version}")
             }
         }
     }

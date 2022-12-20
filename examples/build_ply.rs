@@ -131,5 +131,5 @@ fn main() {
     assert_eq!(string.as_str(), PLY);
 
     // print ply
-    print!("{:#?}", ply);
+    print!("{ply:#?}");
 }

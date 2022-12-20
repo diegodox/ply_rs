@@ -11,7 +11,7 @@ pub(crate) trait PlyWriteHeader<T: Write> {
 
 impl<T: Write> PlyWriteHeader<T> for PLYFile {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
-        writeln!(writer, "{}", MAGIC_NUMBER)?;
+        writeln!(writer, "{MAGIC_NUMBER}")?;
         self.format.write_header(writer)?;
         for comment in self.comments.iter() {
             comment.write_header(writer)?;
@@ -22,7 +22,7 @@ impl<T: Write> PlyWriteHeader<T> for PLYFile {
                 Element::ListElement(e) => e.write_header(writer),
             }?;
         }
-        writeln!(writer, "{}", END_HEADER)?;
+        writeln!(writer, "{END_HEADER}")?;
         Ok(())
     }
 }
@@ -30,12 +30,12 @@ impl<T: Write> PlyWriteHeader<T> for PLYFile {
 impl<T: Write> PlyWriteHeader<T> for Format {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
         match self {
-            crate::Format::Ascii { version } => writeln!(writer, "format ascii {}", version),
+            crate::Format::Ascii { version } => writeln!(writer, "format ascii {version}"),
             crate::Format::BinaryBigEndian { version } => {
-                writeln!(writer, "format binary_big_endian {}", version)
+                writeln!(writer, "format binary_big_endian {version}")
             }
             crate::Format::BinaryLittleEndian { version } => {
-                writeln!(writer, "format binary_little_endian {}", version)
+                writeln!(writer, "format binary_little_endian {version}")
             }
         }
     }
