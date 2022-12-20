@@ -75,42 +75,34 @@ impl PLYValueTypeName {
         match self {
             PLYValueTypeName::Char => PLYValue::Char(i8::from_be_bytes([bytes.next().unwrap()])),
             PLYValueTypeName::Uchar => PLYValue::Uchar(u8::from_be_bytes([bytes.next().unwrap()])),
-            PLYValueTypeName::Short => PLYValue::Short(i16::from_be_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Ushort => PLYValue::Ushort(u16::from_be_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Int => PLYValue::Int(i32::from_be_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Uint => PLYValue::Uint(u32::from_be_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Float => PLYValue::Float(f32::from_be_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Double => PLYValue::Double(f64::from_be_bytes([
-                bytes.next().unwrap(), //1
-                bytes.next().unwrap(), //2
-                bytes.next().unwrap(), //3
-                bytes.next().unwrap(), //4
-                bytes.next().unwrap(), //5
-                bytes.next().unwrap(), //6
-                bytes.next().unwrap(), //7
-                bytes.next().unwrap(), //8
-            ])),
+            PLYValueTypeName::Short => {
+                PLYValue::Short(i16::from_be_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
+            PLYValueTypeName::Ushort => {
+                PLYValue::Ushort(u16::from_be_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
+            PLYValueTypeName::Int => PLYValue::Int(i32::from_be_bytes(std::array::from_fn(|_| {
+                bytes.next().unwrap()
+            }))),
+            PLYValueTypeName::Uint => {
+                PLYValue::Uint(u32::from_be_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
+            PLYValueTypeName::Float => {
+                PLYValue::Float(f32::from_be_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
+            PLYValueTypeName::Double => {
+                PLYValue::Double(f64::from_be_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
         }
     }
     /// from little-endian
@@ -118,42 +110,34 @@ impl PLYValueTypeName {
         match self {
             PLYValueTypeName::Char => PLYValue::Char(i8::from_le_bytes([bytes.next().unwrap()])),
             PLYValueTypeName::Uchar => PLYValue::Uchar(u8::from_le_bytes([bytes.next().unwrap()])),
-            PLYValueTypeName::Short => PLYValue::Short(i16::from_le_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Ushort => PLYValue::Ushort(u16::from_le_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Int => PLYValue::Int(i32::from_le_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Uint => PLYValue::Uint(u32::from_le_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Float => PLYValue::Float(f32::from_le_bytes([
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-                bytes.next().unwrap(),
-            ])),
-            PLYValueTypeName::Double => PLYValue::Double(f64::from_le_bytes([
-                bytes.next().unwrap(), //1
-                bytes.next().unwrap(), //2
-                bytes.next().unwrap(), //3
-                bytes.next().unwrap(), //4
-                bytes.next().unwrap(), //5
-                bytes.next().unwrap(), //6
-                bytes.next().unwrap(), //7
-                bytes.next().unwrap(), //8
-            ])),
+            PLYValueTypeName::Short => {
+                PLYValue::Short(i16::from_le_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
+            PLYValueTypeName::Ushort => {
+                PLYValue::Ushort(u16::from_le_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
+            PLYValueTypeName::Int => PLYValue::Int(i32::from_le_bytes(std::array::from_fn(|_| {
+                bytes.next().unwrap()
+            }))),
+            PLYValueTypeName::Uint => {
+                PLYValue::Uint(u32::from_le_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
+            PLYValueTypeName::Float => {
+                PLYValue::Float(f32::from_le_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
+            PLYValueTypeName::Double => {
+                PLYValue::Double(f64::from_le_bytes(std::array::from_fn(|_| {
+                    bytes.next().unwrap()
+                })))
+            }
         }
     }
     pub fn zero(&self) -> PLYValue {
