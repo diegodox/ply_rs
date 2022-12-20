@@ -31,11 +31,11 @@ impl PLYFile {
             crate::Format::Ascii { .. } => {
                 for element in &mut ply.elements {
                     match element {
-                        crate::Element::Element(element) => {
-                            read_elemet_payload_ascii(element, lines)
+                        crate::Element::Element { elements, .. } => {
+                            read_elemet_payload_ascii(elements, lines)
                         }
-                        crate::Element::ListElement(element) => {
-                            read_elemet_payload_ascii(element, lines)
+                        crate::Element::ListElement { elements, .. } => {
+                            read_elemet_payload_ascii(elements, lines)
                         }
                     }
                 }
@@ -45,11 +45,11 @@ impl PLYFile {
                 let mut bytes = s.as_bytes().iter().copied();
                 for element in &mut ply.elements {
                     match element {
-                        crate::Element::Element(element) => {
-                            read_element_payload_be_bytes(element, &mut bytes)
+                        crate::Element::Element { elements, .. } => {
+                            read_element_payload_be_bytes(elements, &mut bytes)
                         }
-                        crate::Element::ListElement(element) => {
-                            read_element_payload_be_bytes(element, &mut bytes)
+                        crate::Element::ListElement { elements, .. } => {
+                            read_element_payload_be_bytes(elements, &mut bytes)
                         }
                     }
                 }
@@ -59,11 +59,11 @@ impl PLYFile {
                 let mut bytes = s.as_bytes().iter().copied();
                 for element in &mut ply.elements {
                     match element {
-                        crate::Element::Element(element) => {
-                            read_element_payload_le_bytes(element, &mut bytes)
+                        crate::Element::Element { elements, .. } => {
+                            read_element_payload_le_bytes(elements, &mut bytes)
                         }
-                        crate::Element::ListElement(element) => {
-                            read_element_payload_le_bytes(element, &mut bytes)
+                        crate::Element::ListElement { elements, .. } => {
+                            read_element_payload_le_bytes(elements, &mut bytes)
                         }
                     }
                 }
@@ -104,53 +104,57 @@ end_header
             },
             comments: vec![Comment(vec!["test".to_string(), "data".to_string()])],
             elements: vec![
-                Element::Element(GenericElement {
+                Element::Element {
                     name: "vertex".to_string(),
-                    count: 3,
-                    props: Property {
-                        props: vec![
-                            PLYValueTypeName::Float,
-                            PLYValueTypeName::Float,
-                            PLYValueTypeName::Float,
-                        ],
-                        names: vec!["x".to_string(), "y".to_string(), "z".to_string()],
-                    },
-                    payloads: vec![
-                        Payload(vec![
-                            PLYValue::Float(0f32),
-                            PLYValue::Float(0f32),
-                            PLYValue::Float(0f32)
-                        ],),
-                        Payload(vec![
-                            PLYValue::Float(0f32),
-                            PLYValue::Float(0f32),
-                            PLYValue::Float(1f32)
-                        ],),
-                        Payload(vec![
-                            PLYValue::Float(0f32),
-                            PLYValue::Float(1f32),
-                            PLYValue::Float(1f32)
-                        ],)
-                    ]
-                }),
-                Element::ListElement(GenericElement {
+                    elements: GenericElement {
+                        count: 3,
+                        props: Property {
+                            props: vec![
+                                PLYValueTypeName::Float,
+                                PLYValueTypeName::Float,
+                                PLYValueTypeName::Float,
+                            ],
+                            names: vec!["x".to_string(), "y".to_string(), "z".to_string()],
+                        },
+                        payloads: vec![
+                            Payload(vec![
+                                PLYValue::Float(0f32),
+                                PLYValue::Float(0f32),
+                                PLYValue::Float(0f32)
+                            ],),
+                            Payload(vec![
+                                PLYValue::Float(0f32),
+                                PLYValue::Float(0f32),
+                                PLYValue::Float(1f32)
+                            ],),
+                            Payload(vec![
+                                PLYValue::Float(0f32),
+                                PLYValue::Float(1f32),
+                                PLYValue::Float(1f32)
+                            ],)
+                        ]
+                    }
+                },
+                Element::ListElement {
                     name: "face".to_string(),
-                    count: 3,
-                    props: PropertyList {
-                        prop: crate::PLYValueTypeName::Uint,
-                        name: "vertex_list".to_string(),
-                        count: crate::PLYValueTypeName::Uchar
-                    },
-                    payloads: vec![
-                        Payload(vec![PLYValue::Uint(1)]),
-                        Payload(vec![PLYValue::Uint(1), PLYValue::Uint(2)]),
-                        Payload(vec![
-                            PLYValue::Uint(1),
-                            PLYValue::Uint(2),
-                            PLYValue::Uint(3)
-                        ])
-                    ]
-                })
+                    elements: GenericElement {
+                        count: 3,
+                        props: PropertyList {
+                            prop: crate::PLYValueTypeName::Uint,
+                            name: "vertex_list".to_string(),
+                            count: crate::PLYValueTypeName::Uchar
+                        },
+                        payloads: vec![
+                            Payload(vec![PLYValue::Uint(1)]),
+                            Payload(vec![PLYValue::Uint(1), PLYValue::Uint(2)]),
+                            Payload(vec![
+                                PLYValue::Uint(1),
+                                PLYValue::Uint(2),
+                                PLYValue::Uint(3)
+                            ])
+                        ]
+                    }
+                }
             ]
         }
     )

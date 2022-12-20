@@ -3,7 +3,6 @@
 //! [PLY (Polygon File Format)](http://paulbourke.net/dataformats/ply/) file parser for Rust
 //!
 use std::{
-    convert::TryInto,
     fmt::{Debug, Display},
     ops::{Deref, DerefMut},
 };
@@ -79,42 +78,26 @@ impl Display for Comment {
 #[derive(Debug, Clone, PartialEq)]
 /// Enum represent PLY Element
 pub enum Element {
-    Element(GenericElement<Property>),
-    ListElement(GenericElement<PropertyList>),
-}
-impl TryInto<GenericElement<Property>> for Element {
-    type Error = PLYError;
-
-    fn try_into(self) -> Result<GenericElement<Property>, Self::Error> {
-        match self {
-            Element::Element(e) => Ok(e),
-            Element::ListElement(_) => Err(PLYError::MissmatchDataType),
-        }
-    }
-}
-impl TryInto<GenericElement<PropertyList>> for Element {
-    type Error = PLYError;
-
-    fn try_into(self) -> Result<GenericElement<PropertyList>, Self::Error> {
-        match self {
-            Element::ListElement(e) => Ok(e),
-            Element::Element(_) => Err(PLYError::MissmatchDataType),
-        }
-    }
+    Element {
+        name: String,
+        elements: GenericElement<Property>,
+    },
+    ListElement {
+        name: String,
+        elements: GenericElement<PropertyList>,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq)]
 /// Struct represent Generic PLY Element
 pub struct GenericElement<P> {
-    pub name: String,
     count: usize,
     props: P,
     payloads: Vec<Payload>,
 }
 impl<P> GenericElement<P> {
-    pub fn new<S: Into<String>>(name: S, property: P) -> GenericElement<P> {
+    pub fn new(property: P) -> GenericElement<P> {
         Self {
-            name: name.into(),
             count: 0,
             props: property,
             payloads: Vec::new(),
@@ -167,7 +150,7 @@ fn test_push_payload() {
             props.push_prop("z", PLYValueTypeName::Float);
             props
         };
-        GenericElement::new("test_element", property)
+        GenericElement::new(property)
     };
 
     let result = element.push_payload(Payload(vec![
@@ -212,14 +195,11 @@ impl GenericElement<PropertyList> {
 }
 #[test]
 fn test_push_list_payload() {
-    let mut element = GenericElement::new(
-        "test_element",
-        PropertyList::new(
-            "list_name",
-            PLYValueTypeName::Uchar,
-            PLYValueTypeName::Float,
-        ),
-    );
+    let mut element = GenericElement::new(PropertyList::new(
+        "list_name",
+        PLYValueTypeName::Uchar,
+        PLYValueTypeName::Float,
+    ));
 
     let result = element.push_payload(Payload(vec![
         PLYValue::Float(1f32),

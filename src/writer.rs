@@ -15,8 +15,12 @@ impl PLYFile {
         self.write_header(writer)?;
         for element in self.elements.iter() {
             match element {
-                Element::Element(e) => write_element_payload(e, writer, &self.format),
-                Element::ListElement(e) => write_element_payload(e, writer, &self.format),
+                Element::Element { elements: e, .. } => {
+                    write_element_payload(e, writer, &self.format)
+                }
+                Element::ListElement { elements: e, .. } => {
+                    write_element_payload(e, writer, &self.format)
+                }
             }?;
         }
         Ok(())
@@ -27,78 +31,82 @@ impl PLYFile {
 fn test_write_ply() {
     use crate::*;
     let ply = {
-        let element_vertex = Element::Element(GenericElement {
+        let element_vertex = Element::Element {
             name: "vertex".to_string(),
-            count: 8,
-            props: Property {
-                props: vec![
-                    PLYValueTypeName::Float,
-                    PLYValueTypeName::Float,
-                    PLYValueTypeName::Float,
+            elements: GenericElement {
+                count: 8,
+                props: Property {
+                    props: vec![
+                        PLYValueTypeName::Float,
+                        PLYValueTypeName::Float,
+                        PLYValueTypeName::Float,
+                    ],
+                    names: vec!["x".to_string(), "y".to_string(), "z".to_string()],
+                },
+                payloads: vec![
+                    Payload(vec![
+                        PLYValue::Float(0f32),
+                        PLYValue::Float(0f32),
+                        PLYValue::Float(0f32),
+                    ]),
+                    Payload(vec![
+                        PLYValue::Float(0f32),
+                        PLYValue::Float(0f32),
+                        PLYValue::Float(1f32),
+                    ]),
+                    Payload(vec![
+                        PLYValue::Float(0f32),
+                        PLYValue::Float(1f32),
+                        PLYValue::Float(1f32),
+                    ]),
+                    Payload(vec![
+                        PLYValue::Float(0f32),
+                        PLYValue::Float(1f32),
+                        PLYValue::Float(0f32),
+                    ]),
+                    Payload(vec![
+                        PLYValue::Float(1f32),
+                        PLYValue::Float(0f32),
+                        PLYValue::Float(0f32),
+                    ]),
+                    Payload(vec![
+                        PLYValue::Float(1f32),
+                        PLYValue::Float(0f32),
+                        PLYValue::Float(1f32),
+                    ]),
+                    Payload(vec![
+                        PLYValue::Float(1f32),
+                        PLYValue::Float(1f32),
+                        PLYValue::Float(1f32),
+                    ]),
+                    Payload(vec![
+                        PLYValue::Float(1f32),
+                        PLYValue::Float(1f32),
+                        PLYValue::Float(0f32),
+                    ]),
                 ],
-                names: vec!["x".to_string(), "y".to_string(), "z".to_string()],
             },
-            payloads: vec![
-                Payload(vec![
-                    PLYValue::Float(0f32),
-                    PLYValue::Float(0f32),
-                    PLYValue::Float(0f32),
-                ]),
-                Payload(vec![
-                    PLYValue::Float(0f32),
-                    PLYValue::Float(0f32),
-                    PLYValue::Float(1f32),
-                ]),
-                Payload(vec![
-                    PLYValue::Float(0f32),
-                    PLYValue::Float(1f32),
-                    PLYValue::Float(1f32),
-                ]),
-                Payload(vec![
-                    PLYValue::Float(0f32),
-                    PLYValue::Float(1f32),
-                    PLYValue::Float(0f32),
-                ]),
-                Payload(vec![
-                    PLYValue::Float(1f32),
-                    PLYValue::Float(0f32),
-                    PLYValue::Float(0f32),
-                ]),
-                Payload(vec![
-                    PLYValue::Float(1f32),
-                    PLYValue::Float(0f32),
-                    PLYValue::Float(1f32),
-                ]),
-                Payload(vec![
-                    PLYValue::Float(1f32),
-                    PLYValue::Float(1f32),
-                    PLYValue::Float(1f32),
-                ]),
-                Payload(vec![
-                    PLYValue::Float(1f32),
-                    PLYValue::Float(1f32),
-                    PLYValue::Float(0f32),
-                ]),
-            ],
-        });
-        let element_list = Element::ListElement(GenericElement {
+        };
+        let element_list = Element::ListElement {
             name: "list".to_string(),
-            count: 3,
-            props: PropertyList {
-                count: PLYValueTypeName::Uchar,
-                prop: PLYValueTypeName::Char,
-                name: "vertex_id".to_string(),
+            elements: GenericElement {
+                count: 3,
+                props: PropertyList {
+                    count: PLYValueTypeName::Uchar,
+                    prop: PLYValueTypeName::Char,
+                    name: "vertex_id".to_string(),
+                },
+                payloads: vec![
+                    Payload(vec![PLYValue::Char(3)]),
+                    Payload(vec![PLYValue::Char(3), PLYValue::Char(3)]),
+                    Payload(vec![
+                        PLYValue::Char(3),
+                        PLYValue::Char(3),
+                        PLYValue::Char(3),
+                    ]),
+                ],
             },
-            payloads: vec![
-                Payload(vec![PLYValue::Char(3)]),
-                Payload(vec![PLYValue::Char(3), PLYValue::Char(3)]),
-                Payload(vec![
-                    PLYValue::Char(3),
-                    PLYValue::Char(3),
-                    PLYValue::Char(3),
-                ]),
-            ],
-        });
+        };
         PLYFile {
             format: Format::Ascii {
                 version: "1.0".to_string(),

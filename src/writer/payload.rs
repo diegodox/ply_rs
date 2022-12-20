@@ -34,7 +34,6 @@ fn test_write_element_payload_ascii() {
     use crate::*;
     let mut writer = BufWriter::new(Vec::new());
     let element = GenericElement {
-        name: "vertex".to_string(),
         count: 8,
         props: Property {
             props: vec![
@@ -87,6 +86,7 @@ fn test_write_element_payload_ascii() {
             ]),
         ],
     };
+
     write_element_payload(
         &element,
         &mut writer,

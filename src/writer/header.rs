@@ -1,6 +1,6 @@
 use std::io::{BufWriter, Write};
 
-use crate::{Comment, Element, Format, GenericElement, PLYFile, Property, PropertyList};
+use crate::{Comment, Element, Format, PLYFile, Property, PropertyList};
 
 const MAGIC_NUMBER: &str = "ply";
 const END_HEADER: &str = "end_header";
@@ -17,10 +17,7 @@ impl<T: Write> PlyWriteHeader<T> for PLYFile {
             comment.write_header(writer)?;
         }
         for element in self.elements.iter() {
-            match element {
-                Element::Element(e) => e.write_header(writer),
-                Element::ListElement(e) => e.write_header(writer),
-            }?;
+            element.write_header(writer)?
         }
         writeln!(writer, "{END_HEADER}")?;
         Ok(())
@@ -69,40 +66,53 @@ fn test_write_comment() {
     )
 }
 
-impl<T: Write, P: PlyWriteHeader<T>> PlyWriteHeader<T> for GenericElement<P> {
+impl<T: Write> PlyWriteHeader<T> for Element {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
-        writeln!(writer, "element {} {}", self.name, self.count)?;
-        self.property().write_header(writer)
+        match self {
+            Element::Element { name, elements } => {
+                writeln!(writer, "element {} {}", name, elements.count)?;
+                elements.property().write_header(writer)
+            }
+
+            Element::ListElement { name, elements } => {
+                writeln!(writer, "element {} {}", name, elements.count)?;
+                elements.property().write_header(writer)
+            }
+        }
     }
 }
+
 #[test]
 fn test_write_element_header() {
     use crate::*;
     let mut writer = BufWriter::new(Vec::new());
-    let element = GenericElement {
+    let element = Element::Element {
         name: "vertex".to_string(),
-        count: 20,
-        props: Property {
-            props: vec![
-                PLYValueTypeName::Float,
-                PLYValueTypeName::Float,
-                PLYValueTypeName::Float,
-                PLYValueTypeName::Uchar,
-                PLYValueTypeName::Uchar,
-                PLYValueTypeName::Uchar,
-            ],
-            names: vec![
-                "x".to_string(),
-                "y".to_string(),
-                "z".to_string(),
-                "red".to_string(),
-                "green".to_string(),
-                "blue".to_string(),
-            ],
+        elements: GenericElement {
+            count: 20,
+            props: Property {
+                props: vec![
+                    PLYValueTypeName::Float,
+                    PLYValueTypeName::Float,
+                    PLYValueTypeName::Float,
+                    PLYValueTypeName::Uchar,
+                    PLYValueTypeName::Uchar,
+                    PLYValueTypeName::Uchar,
+                ],
+                names: vec![
+                    "x".to_string(),
+                    "y".to_string(),
+                    "z".to_string(),
+                    "red".to_string(),
+                    "green".to_string(),
+                    "blue".to_string(),
+                ],
+            },
+            payloads: Vec::<Payload>::with_capacity(20),
         },
-        payloads: Vec::<Payload>::with_capacity(20),
     };
     element.write_header(&mut writer).unwrap();
+
     assert_eq!(
         writer.into_inner().unwrap(),
         "\
@@ -117,6 +127,7 @@ property uchar blue
         .as_bytes(),
     )
 }
+
 impl<T: Write> PlyWriteHeader<T> for Property {
     fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
         for (name, ply_type) in self.iter() {
@@ -125,6 +136,7 @@ impl<T: Write> PlyWriteHeader<T> for Property {
         Ok(())
     }
 }
+
 #[test]
 fn test_write_property() {
     use crate::*;

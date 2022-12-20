@@ -74,19 +74,21 @@ fn test_from_header_lines() {
                 version: "1.0".to_string()
             },
             comments: vec![Comment(vec!["test".to_string(), "data".to_string()])],
-            elements: vec![Element::Element(GenericElement {
+            elements: vec![Element::Element {
                 name: "vertex".to_string(),
-                count: 8,
-                props: Property {
-                    names: vec!["x".to_string(), "y".to_string(), "z".to_string()],
-                    props: vec![
-                        PLYValueTypeName::Float,
-                        PLYValueTypeName::Float,
-                        PLYValueTypeName::Float
-                    ],
-                },
-                payloads: Vec::with_capacity(8)
-            })]
+                elements: GenericElement {
+                    count: 8,
+                    props: Property {
+                        names: vec!["x".to_string(), "y".to_string(), "z".to_string()],
+                        props: vec![
+                            PLYValueTypeName::Float,
+                            PLYValueTypeName::Float,
+                            PLYValueTypeName::Float
+                        ],
+                    },
+                    payloads: Vec::with_capacity(8)
+                }
+            }]
         }
     )
 }
@@ -169,12 +171,14 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
                     "\"property\" and \"property lines\" cannot be used at same element"
                 );
                 return (
-                    Element::ListElement(GenericElement {
+                    Element::ListElement {
                         name,
-                        count,
-                        props: prop_list,
-                        payloads: Vec::with_capacity(count),
-                    }),
+                        elements: GenericElement {
+                            count,
+                            props: prop_list,
+                            payloads: Vec::with_capacity(count),
+                        },
+                    },
                     None,
                 );
             }
@@ -182,14 +186,16 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
                 name: next_name,
                 count: next_count,
             } => {
-                let element = Element::Element({
-                    GenericElement {
-                        name,
-                        count,
-                        props: prop,
-                        payloads: Vec::with_capacity(count),
-                    }
-                });
+                let element = Element::Element {
+                    name,
+                    elements: {
+                        GenericElement {
+                            count,
+                            props: prop,
+                            payloads: Vec::with_capacity(count),
+                        }
+                    },
+                };
                 return (element, Some((next_name, next_count)));
             }
             HeaderLine::CommentLine(c) => comments.push(c),
@@ -207,14 +213,14 @@ fn read_element_props<I: Iterator<Item = HeaderLine>>(
         }
     }
 
-    let element = Element::Element({
-        GenericElement {
-            name,
+    let element = Element::Element {
+        name,
+        elements: GenericElement {
             count,
             props: prop,
             payloads: Vec::with_capacity(count),
-        }
-    });
+        },
+    };
 
     (element, None)
 }
@@ -237,29 +243,31 @@ property uchar blue"
 
     assert_eq!(
         element,
-        Element::Element(GenericElement {
+        Element::Element {
             name: "vertex".to_string(),
-            count: 20,
-            props: Property {
-                props: vec![
-                    PLYValueTypeName::Float,
-                    PLYValueTypeName::Float,
-                    PLYValueTypeName::Float,
-                    PLYValueTypeName::Uchar,
-                    PLYValueTypeName::Uchar,
-                    PLYValueTypeName::Uchar,
-                ],
-                names: vec![
-                    "x".to_string(),
-                    "y".to_string(),
-                    "z".to_string(),
-                    "red".to_string(),
-                    "green".to_string(),
-                    "blue".to_string()
-                ]
-            },
-            payloads: Vec::with_capacity(20),
-        })
+            elements: GenericElement {
+                count: 20,
+                props: Property {
+                    props: vec![
+                        PLYValueTypeName::Float,
+                        PLYValueTypeName::Float,
+                        PLYValueTypeName::Float,
+                        PLYValueTypeName::Uchar,
+                        PLYValueTypeName::Uchar,
+                        PLYValueTypeName::Uchar,
+                    ],
+                    names: vec![
+                        "x".to_string(),
+                        "y".to_string(),
+                        "z".to_string(),
+                        "red".to_string(),
+                        "green".to_string(),
+                        "blue".to_string()
+                    ]
+                },
+                payloads: Vec::with_capacity(20),
+            }
+        }
     );
     assert_eq!(next, None);
     assert_eq!(comments, vec![Comment(vec!["color".to_string()])]);

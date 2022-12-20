@@ -39,7 +39,6 @@ where
 fn test_read_element_payload_ascii() {
     use crate::*;
     let mut element = GenericElement {
-        name: "vertex".to_string(),
         count: 8,
         props: Property {
             props: vec![
@@ -112,7 +111,6 @@ fn test_read_element_payload_ascii() {
 fn test_read_element_payload_be() {
     use crate::*;
     let mut element = GenericElement {
-        name: "vertex".to_string(),
         count: 8,
         props: Property {
             props: vec![
@@ -210,7 +208,6 @@ fn test_read_element_payload_be() {
 fn test_read_element_payload_le() {
     use crate::*;
     let mut element = GenericElement {
-        name: "vertex".to_string(),
         count: 8,
         props: Property {
             props: vec![
