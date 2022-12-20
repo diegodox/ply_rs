@@ -230,7 +230,7 @@ property uchar red
 property uchar green
 property uchar blue"
         .lines()
-        .map(|line| parse_header_line(line));
+        .map(parse_header_line);
     let mut comments = Vec::new();
 
     let (element, next) = read_element_props(&mut lines, &mut comments, ("vertex".to_string(), 20));
