@@ -145,11 +145,7 @@ property uchar blue
 impl<T: Write> WritePayload<T> for Property {
     type Payload = Payload;
 
-    fn write_payload_ascii(
-        &self,
-        payload: &Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()> {
+    fn write_payload_ascii(&self, payload: &Payload, writer: &mut T) -> std::io::Result<()> {
         let line = payload
             .0
             .iter()
@@ -159,11 +155,7 @@ impl<T: Write> WritePayload<T> for Property {
         writeln!(writer, "{line}")
     }
 
-    fn write_payload_be(
-        &self,
-        payload: &Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()> {
+    fn write_payload_be(&self, payload: &Payload, writer: &mut T) -> std::io::Result<()> {
         for v in payload.0.iter() {
             match v {
                 PLYValue::Char(v) => writer.write(&v.to_be_bytes())?,
@@ -179,11 +171,7 @@ impl<T: Write> WritePayload<T> for Property {
         Ok(())
     }
 
-    fn write_payload_le(
-        &self,
-        payload: &Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()> {
+    fn write_payload_le(&self, payload: &Payload, writer: &mut T) -> std::io::Result<()> {
         for v in payload.0.iter() {
             match v {
                 PLYValue::Char(v) => writer.write(&v.to_le_bytes())?,

@@ -1,10 +1,10 @@
-use std::io::{BufWriter, Write};
+use std::io::Write;
 
 use crate::{Format, GenericElement, Payload};
 
 pub(crate) fn write_element_payload<T: Write, P: WritePayload<T, Payload = Payload>>(
     element: &GenericElement<P>,
-    writer: &mut BufWriter<T>,
+    writer: &mut T,
     format: &Format,
 ) -> std::io::Result<()> {
     match format {
@@ -121,21 +121,9 @@ mod test {
 pub(crate) trait WritePayload<T: Write> {
     type Payload;
 
-    fn write_payload_ascii(
-        &self,
-        payload: &Self::Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()>;
+    fn write_payload_ascii(&self, payload: &Self::Payload, writer: &mut T) -> std::io::Result<()>;
 
-    fn write_payload_be(
-        &self,
-        payload: &Self::Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()>;
+    fn write_payload_be(&self, payload: &Self::Payload, writer: &mut T) -> std::io::Result<()>;
 
-    fn write_payload_le(
-        &self,
-        payload: &Self::Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()>;
+    fn write_payload_le(&self, payload: &Self::Payload, writer: &mut T) -> std::io::Result<()>;
 }

@@ -101,11 +101,7 @@ fn test_write_property_list() {
 impl<T: Write> WritePayload<T> for PropertyList {
     type Payload = Payload;
 
-    fn write_payload_ascii(
-        &self,
-        payload: &Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()> {
+    fn write_payload_ascii(&self, payload: &Payload, writer: &mut T) -> std::io::Result<()> {
         let line = payload
             .iter()
             .map(|v| format!("{v}"))
@@ -114,11 +110,7 @@ impl<T: Write> WritePayload<T> for PropertyList {
         writeln!(writer, "{} {}", payload.len(), line)
     }
 
-    fn write_payload_be(
-        &self,
-        payload: &Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()> {
+    fn write_payload_be(&self, payload: &Payload, writer: &mut T) -> std::io::Result<()> {
         match self.count.try_from(payload.len()).unwrap() {
             PLYValue::Char(v) => writer.write(&v.to_be_bytes())?,
             PLYValue::Uchar(v) => writer.write(&v.to_be_bytes())?,
@@ -144,11 +136,7 @@ impl<T: Write> WritePayload<T> for PropertyList {
         Ok(())
     }
 
-    fn write_payload_le(
-        &self,
-        payload: &Self::Payload,
-        writer: &mut BufWriter<T>,
-    ) -> std::io::Result<()> {
+    fn write_payload_le(&self, payload: &Self::Payload, writer: &mut T) -> std::io::Result<()> {
         match self.count.try_from(payload.len()).unwrap() {
             PLYValue::Char(v) => writer.write(&v.to_le_bytes())?,
             PLYValue::Uchar(v) => writer.write(&v.to_le_bytes())?,
