@@ -1,4 +1,4 @@
-use std::io::{BufWriter, Write};
+use std::io::Write;
 
 use crate::{
     payload::Payload,
@@ -97,7 +97,7 @@ mod test {
 }
 
 impl<T: Write> PlyWriteHeader<T> for Property {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
+    fn write_header(&self, writer: &mut T) -> std::io::Result<()> {
         for (name, ply_type) in self.iter() {
             writeln!(writer, "property {} {}", ply_type.to_str(), name)?
         }
@@ -108,7 +108,7 @@ impl<T: Write> PlyWriteHeader<T> for Property {
 #[test]
 fn test_write_property() {
     use crate::*;
-    let mut writer = BufWriter::new(Vec::new());
+    let mut writer = std::io::BufWriter::new(Vec::new());
     let property = Property {
         props: vec![
             PLYValueTypeName::Float,

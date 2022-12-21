@@ -1,7 +1,4 @@
-use std::{
-    fmt::Display,
-    io::{BufWriter, Write},
-};
+use std::{fmt::Display, io::Write};
 
 use crate::writer::header::PlyWriteHeader;
 
@@ -28,7 +25,7 @@ impl Display for Format {
 }
 
 impl<T: Write> PlyWriteHeader<T> for Format {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
+    fn write_header(&self, writer: &mut T) -> std::io::Result<()> {
         match self {
             crate::Format::Ascii { version } => writeln!(writer, "format ascii {version}"),
             crate::Format::BinaryBigEndian { version } => {

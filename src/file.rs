@@ -42,7 +42,7 @@ impl PLYFile {
 }
 
 impl<T: Write> PlyWriteHeader<T> for PLYFile {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
+    fn write_header(&self, writer: &mut T) -> std::io::Result<()> {
         writeln!(writer, "{MAGIC_NUMBER}")?;
         self.format.write_header(writer)?;
         for comment in self.comments.iter() {

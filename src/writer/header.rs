@@ -1,5 +1,5 @@
-use std::io::{BufWriter, Write};
+use std::io::Write;
 
 pub(crate) trait PlyWriteHeader<T: Write> {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()>;
+    fn write_header(&self, writer: &mut T) -> std::io::Result<()>;
 }

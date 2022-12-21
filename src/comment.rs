@@ -1,7 +1,4 @@
-use std::{
-    fmt::Display,
-    io::{BufWriter, Write},
-};
+use std::{fmt::Display, io::Write};
 
 use crate::writer::header::PlyWriteHeader;
 
@@ -34,14 +31,14 @@ impl Display for Comment {
 }
 
 impl<T: Write> PlyWriteHeader<T> for Comment {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
+    fn write_header(&self, writer: &mut T) -> std::io::Result<()> {
         writeln!(writer, "comment {}", self.0.join(" "))
     }
 }
 
 #[test]
 fn test_write_comment() {
-    let mut writer = BufWriter::new(Vec::new());
+    let mut writer = std::io::BufWriter::new(Vec::new());
     let comment = Comment(vec!["test".to_string(), "comment".to_string()]);
     comment.write_header(&mut writer).unwrap();
     assert_eq!(

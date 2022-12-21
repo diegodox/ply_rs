@@ -1,4 +1,4 @@
-use std::io::{BufWriter, Write};
+use std::io::Write;
 
 use crate::{
     payload::Payload,
@@ -71,7 +71,7 @@ mod test {
 }
 
 impl<T: Write> PlyWriteHeader<T> for PropertyList {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
+    fn write_header(&self, writer: &mut T) -> std::io::Result<()> {
         writeln!(
             writer,
             "property list {} {} {}",
@@ -85,7 +85,7 @@ impl<T: Write> PlyWriteHeader<T> for PropertyList {
 #[test]
 fn test_write_property_list() {
     use crate::*;
-    let mut writer = BufWriter::new(Vec::new());
+    let mut writer = std::io::BufWriter::new(Vec::new());
     let property = PropertyList {
         name: "vertex".to_string(),
         count: PLYValueTypeName::Uchar,

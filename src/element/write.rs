@@ -1,9 +1,9 @@
-use std::io::{BufWriter, Write};
+use std::io::Write;
 
 use crate::{writer::header::PlyWriteHeader, Element};
 
 impl<T: Write> PlyWriteHeader<T> for Element {
-    fn write_header(&self, writer: &mut BufWriter<T>) -> std::io::Result<()> {
+    fn write_header(&self, writer: &mut T) -> std::io::Result<()> {
         match self {
             Element::Element { name, elements } => {
                 writeln!(writer, "element {} {}", name, elements.count())?;
