@@ -36,7 +36,7 @@ impl PLYValueTypeName {
             PLYValueTypeName::Short => "short",
             PLYValueTypeName::Ushort => "ushort",
             PLYValueTypeName::Int => "int",
-            PLYValueTypeName::Uint => "uinit",
+            PLYValueTypeName::Uint => "uint",
             PLYValueTypeName::Float => "float",
             PLYValueTypeName::Double => "double",
         }
